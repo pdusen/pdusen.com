@@ -1,6 +1,8 @@
 # pdusen.com
 
-> 
+This is me writing a description largely so that I can test git pulling
+from the nodejs server I wrote.
+>
 
 ## To get started
 
