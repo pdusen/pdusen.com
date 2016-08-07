@@ -25,7 +25,6 @@ gulp.task('scripts', () =>
   // NOTE: The order here is important since it's concatenated in order from
   // top to bottom, so you want vendor scripts etc on top
   gulp.src([
-    'src/assets/javascript/vendor.js',
     'src/assets/javascript/main.js'
   ])
     .pipe(newer('.tmp/assets/javascript/index.js', {dest: '.tmp/assets/javascript', ext: '.js'}))
@@ -53,6 +52,38 @@ gulp.task('scripts', () =>
     .pipe(gulp.dest('.tmp/assets/javascript'))
 );
 
+gulp.task('scripts:vendor', () =>
+  // NOTE: The order here is important since it's concatenated in order from
+  // top to bottom, so you want vendor scripts etc on top
+  gulp.src([
+    'bower_components/jquery/dist/jquery.js',
+    'bower_components/bootstrap/dist/js/bootstrap.js'
+  ])
+    .pipe(newer('.tmp/assets/javascript/vendor.js', {dest: '.tmp/assets/javascript', ext: '.js'}))
+    .pipe(when(!argv.prod, sourcemaps.init()))
+    .pipe(babel({
+      presets: ['es2015']
+    }))
+    .pipe(concat('00_vendor.js'))
+    .pipe(size({
+      showFiles: true
+    }))
+    .pipe(when(argv.prod, rename({suffix: '.min'})))
+    .pipe(when(argv.prod, when('*.js', uglify({preserveComments: 'some'}))))
+    .pipe(when(argv.prod, size({
+      showFiles: true
+    })))
+    .pipe(when(argv.prod, rev()))
+    .pipe(when(!argv.prod, sourcemaps.write('.')))
+    .pipe(when(argv.prod, gulp.dest('.tmp/assets/javascript')))
+    .pipe(when(argv.prod, when('*.js', gzip({append: true}))))
+    .pipe(when(argv.prod, size({
+      gzip: true,
+      showFiles: true
+    })))
+    .pipe(gulp.dest('.tmp/assets/javascript'))
+);
+
 // 'gulp styles' -- creates a CSS file from your SASS, adds prefixes and
 // creates a Sourcemap
 // 'gulp styles --prod' -- creates a CSS file from your SASS, adds prefixes and
@@ -60,6 +91,39 @@ gulp.task('scripts', () =>
 gulp.task('styles', () =>
   gulp.src('src/assets/scss/style.scss')
     .pipe(when(!argv.prod, sourcemaps.init()))
+    .pipe(sass({
+      precision: 10
+    }).on('error', sass.logError))
+    .pipe(postcss([
+      autoprefixer({browsers: 'last 1 version'})
+    ]))
+    .pipe(size({
+      showFiles: true
+    }))
+    .pipe(when(argv.prod, rename({suffix: '.min'})))
+    .pipe(when(argv.prod, when('*.css', cssnano({autoprefixer: false}))))
+    .pipe(when(argv.prod, size({
+      showFiles: true
+    })))
+    .pipe(when(argv.prod, rev()))
+    .pipe(when(!argv.prod, sourcemaps.write('.')))
+    .pipe(when(argv.prod, gulp.dest('.tmp/assets/stylesheets')))
+    .pipe(when(argv.prod, when('*.css', gzip({append: true}))))
+    .pipe(when(argv.prod, size({
+      gzip: true,
+      showFiles: true
+    })))
+    .pipe(gulp.dest('.tmp/assets/stylesheets'))
+    .pipe(when(!argv.prod, browserSync.stream()))
+);
+
+gulp.task('styles:vendor', () =>
+  gulp.src([
+      'bower_components/bootstrap/dist/css/bootstrap.css',
+      'bower_components/bootstrap-solarized-theme/dist/css/solarized-dark-theme.css',
+    ])
+    .pipe(when(!argv.prod, sourcemaps.init()))
+    .pipe(concat('00_vendor.css'))
     .pipe(sass({
       precision: 10
     }).on('error', sass.logError))
