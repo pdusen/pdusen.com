@@ -1,0 +1,23 @@
+{
+  "name": "pdusen-com",
+  "description": "",
+  "main": "",
+  "authors": [
+    "[object Object]"
+  ],
+  "license": "MIT",
+  "homepage": "http://www.pdusen.com",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap-solarized-theme": "^1.0.3",
+    "bootstrap-sass": "^3.3.7",
+    "bootstrap": "^3.3.7"
+  }
+}
