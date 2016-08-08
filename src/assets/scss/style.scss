@@ -1,8 +1,4 @@
-/*
-The main SCSS file for everything, yep
-*/
-
-@import "main";
-@import "base";
-@import "layout";
-@import "syntax-highlighting";
+body {
+    font-family: "Open Sans", sans-serif;
+    padding-top: 70px;
+}
