@@ -120,7 +120,7 @@ gulp.task('styles', () =>
 gulp.task('styles:vendor', () =>
   gulp.src([
       'bower_components/bootstrap/dist/css/bootstrap.css',
-      'bower_components/bootstrap-solarized-theme/dist/css/solarized-light-theme.css',
+      'bower_components/bootstrap-solarized-theme/dist/css/solarized-dark-theme.css',
     ])
     .pipe(when(!argv.prod, sourcemaps.init()))
     .pipe(concat('00_vendor.css'))
